@@ -1,7 +1,14 @@
-fragment code slides
 Make the case class slide look better
 In the case class section add case object/object
-Add code examples and images to the Functional slides
 Fix coloring for the first functional slide
-Add section on mulitple parameter sets and implicits
+Add var examples to the first slide
+
+Better examples for traits, like multiple traits, mixins
+
+What frameworks do you use in Scala, for web Play
+
+explain Seq
+explain case object more
+
+explain in more detail how to pass around functions
 
