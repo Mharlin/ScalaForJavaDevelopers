@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Scala for java developers</title>
 
 		<link rel="stylesheet" type="text/css" href="css/reveal.css">
 		<link rel="stylesheet" type="text/css" href="css/theme/black.css">
@@ -22,14 +22,28 @@
 		</script>
 	</head>
 	<body>
+    <img src="./image/speedledger.png" style="border:0; position:fixed; left:0; bottom:5px; width: 200px; display:block">
     <div class="reveal">
       <div class="slides">
+        <section>
+          <section data-markdown data-notes="^Note:" data-noescape>
+            <script type="text/template">
+              ## Scala for Java developers
+              <p> Magnus Härlin </p>
+              <p> @MagnusHarlin </p>
+              <p> github.com/Mharlin </p>
+
+              <img alt="SpeedLedger" src="./image/speedledger.png" style="border:0px; margin:0px; padding:0px" width="500px" />
+              <img alt="Sponsors" src="./image/ScalaIOSponsors.png" style="margin:0px" width="1000px;"/>
+            </script>
+          </section>
+        </section>
 
         <section>
           <section data-markdown data-notes="^Note:" data-noescape>
             <script type="text/template">
               ## Why Scala
-              <img alt="Spagetti" src="./image/hipsters.jpg" height="500px" />
+              <img alt="Hipsters" src="./image/hipsters.jpg" height="500px" />
               <small><a href="https://cdn.vox-cdn.com/thumbor/uVtZU34pQ8pUGaDYjZ63jg9uh10=/0x0:4608x3456/1200x800/filters:focal(0x0:4608x3456)/cdn.vox-cdn.com/uploads/chorus_image/image/45890648/164353496.0.0.jpg">
               Peter Tsai Photography/Getty</a></small>
 
@@ -46,27 +60,33 @@ Note:
 Note:
               * Code I'm writing is closer to what I want to do
               * Type inference
+              * No return statements
               * No semi colons
+              * You spend more than 10x reading code vs writing code
             </script>
           </section>
           <section>
             <pre>
-              <code class="scala" data-trim>
-                scala> val a: Int = 5
-                a: Int = 5
+              <code class="scala" data-trim data-noescape>
+                scala> val a<span class="fragment">: Int</span><span class="fragment"> = 5</span>
+                <span class="fragment">a: Int = 5</span>
               </code>
-              <code class="scala" data-trim>
+              <code class="scala fragment" data-trim data-noescape>
                 scala> val a = 5
-                a: Int = 5
+                <span class="fragment">a: Int = 5</span>
               </code>
-              <code data-trim>
+              <code class="scala fragment" data-trim data-noescape>
              scala> def add(x:Int, y:Int) = x + y
-             add: (x: Int, y: Int)Int
+             # add: (x: Int, y: Int) => Int
 
              scala> add(5, 3)
              res0: Int = 8
               </code>
             </pre>
+            <aside class="notes">
+              * val is for immutable variables
+              * var is for mutable variables
+            </aside>
           </section>
 
           <section data-markdown data-noescape>
@@ -82,13 +102,14 @@ Note:
 
           <section data-markdown data-noescape>
             <script type="text/template">
-              ```scala
-                def getDbUser(id: Int): User = ???
-              ```
-
-              ```scala
-                def getDbUser(id: Int): Option[User] = ???
-              ```
+              <pre>
+                <code class="scala" data-trim data-noescape>
+                  def getDbUser(id: Int): User = ???
+                </code>
+                <code class="scala fragment" data-trim>
+                  def getDbUser(id: Int): Option[User] = ???
+                </code>
+              </pre>
             </script>
           </section>
 
@@ -104,7 +125,7 @@ Note:
 
                 FP makes code understandable by ***minimizing*** moving parts.
                 <br/><br/>
-                <small>Micheal Feathers, author of "Working with Legacy Code"</small>
+                <small>Micheal Feathers, author of "Working effectively with Legacy Code"</small>
               </div>
             </script>
           </section>
@@ -125,8 +146,8 @@ Note:
 
           <section>
             <pre>
-              <code data-trim data-noescpae class="java" style="max-height:614px; margin-top:-30px; font-size:12px; line-height: normal" >
-                 class User {
+              <code data-trim data-noescape class="scala" style="max-height:630px; margin-top:-30px; font-size:12px; line-height: normal" >
+                class User {
                     private String name;
 
                     private List<Order> orders;
@@ -172,22 +193,307 @@ Note:
                     public void setCategory(String category) { this.category = category; }
                 }
                 </code>
-              </pre>
+            </pre>
             </script>
           </section>
+
           <section>
             <pre>
-              <code data-trim data-noescpae class="scala" >
-                case class User(name: String, orders: List[Order])
-                case class Order(id: Int, products: List[Product])
-                case class Product(id: Int, category: String)
-
-                val product = Product(1, "Toys")
-                val order = Order(1, List(product))
-                val user = User("Magnus", List(order))
+              <code data-trim data-noescape class="scala" style="font-size:29px">
+                case class<span class="fragment"> User(name: String, orders: Seq[Order])</span>
+                <span class="fragment">case class Order(id: Int, products: Seq[Product])
+                case class Product(id: Int, category: String)</span>
+                <span class="fragment">
+                val product = Product(1, "Fidget spinner")
+                val order = Order(1, Seq(product))
+                val user = User("Magnus", Seq(order))
+                # user: User = User(Magnus, List(
+                               Order(1, List(
+                               Product(1,Fidget spinner)))))
+                </span>
             </code>
             </pre>
+            <aside class="notes">
+              Mention Seq and the easy with which you can use it
+            </aside>
           </section>
+        </section>
+
+        <section>
+          <section data-markdown >
+            <script type="text/template">
+              ## Options
+              * Instead of Null
+              * Type system support for optional values
+            </script>
+          </section>
+
+          <section data-markdown data-noescape >
+            <script type="text/template">
+            ## Create Option values
+            <pre>
+              <code data-trim data-noescape class="scala">
+                <span class="fragment">val a = Some("Scala")</span>
+                <span class="fragment"># a: Some[String] = Some(Scala)</span>
+
+                <span class="fragment">val a = None
+                # a: None.type = None</span>
+
+                <span class="fragment">val maybeScalaIO =
+                if (util.Random.nextBoolean()) Some("ScalaIO")
+                else None</span>
+
+                <span class="fragment">maybeScalaIO<span class="fragment">.getOrElse("Normal working day")</span>
+                </span>
+              </code>
+            </pre>
+            </script>
+          </section>
+        </section>
+
+        <section>
+          <section data-markdown >
+            <script type="text/template">
+              ## Case classes
+              * Immutable
+              * Concise syntax for value objects
+              * Built-in toString, equals, hash-code, extractor, creator, copy
+            </script>
+          </section>
+
+          <section>
+            <pre>
+              <code data-trim data-noescape class="scala" >
+                case class User(firstName: String, surname: String)
+
+                <span class="fragment">val user = new User</span><span class="fragment">("Scala", "IO")</span>
+                <span class="fragment"># user: User = User(Scala,IO)</span>
+
+                <span class="fragment">val user = User</span><span class="fragment">.apply("Scala", "IO")</span>
+                <span class="fragment"># user: User = User(Scala,IO)</span>
+
+                <span class="fragment">val user = User</span><span class="fragment">("Scala", "IO")</span>
+                <span class="fragment"># user: User = User(Scala,IO)</span>
+
+                <span class="fragment">val user2 = user</span><span class="fragment">.copy(firstName = "Magnus")</span>
+                <span class="fragment"># user2: User = User(Magnus,IO)</span>
+              </code>
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <section data-markdown >
+            <script type="text/template">
+              ## Pattern matching
+              * Switch on steroids
+              * Expression that match on something
+
+              <img src="./image/matchingshape.jpg" width="500px" />
+
+              <small><a href="https://www.flickr.com/photos/ellasdad/425813314/">
+              Ella's dad @ flickr</a></small>
+            </script>
+          </section>
+
+          <section>
+            <pre>
+              <code data-trim class="scala" data-noescape>
+                case class User(firstName: String, surname: Option[String])
+
+                <span class="fragment">def matchUser(u: User) =</span>
+                  <span class="fragment">u match {
+                    <span class="fragment">case User</span><span class="fragment">(fname</span><span class="fragment">, None) => </span>
+                      <span class="fragment">println(s"Got first name: $fname but no surname"))</span>
+                    <span class="fragment">case User</span><span class="fragment">(_</span><span class="fragment">, Some(lName)) => </span>
+                      <span class="fragment">println(s"Got lastname: $lName and ignored first name")</span>
+                  }</span>
+              </code>
+            </pre>
+            <aside class="notes">
+              'case' does not mean the same in case class and match case
+            </aside>
+          </section>
+
+          <section>
+            <pre>
+              <code data-trim data-noescape class="scala" >
+                trait Person
+                <span class="fragment">case class Customer(vip: Boolean) <span class="fragment">extends Person</span>
+                case class Employee(jobTitle: String) <span class="fragment">extends Person</span></span>
+                <span class="fragment">case object Nerd extends Person
+                case object User extends Person</span>
+
+                <span class="fragment">def matchUser(p: Person) = p match {
+                  case Customer(true) => println("Customer is VIP"))
+                  case Customer(false) => println("Customer is not VIP"))
+                  </span><span class="fragment">case Nerd => println(s"Great, we got a nerd!")</span>
+                  <span class="fragment">case _ => println("all other cases")
+                }</span>
+              </code>
+            </pre>
+          </section>
+
+          <section >
+            Partial functions
+            <pre>
+              <code data-trim data-noescape class="scala" style="max-height:800px">
+              <span class="fragment">Seq(1, "ScalaIO").map {
+                case i: Int => i 
+                case s: String => s
+              }
+              # Seq[Any] = List(1, ScalaIO)</span>
+
+              <span class="fragment">Seq(1, "ScalaIO", true).map {
+                case i: Int => i.toString 
+                case s: String => s
+              }
+              # scala.MatchError: true (of class java.lang.Boolean)</span>
+
+              <span class="fragment">Seq(1, "ScalaIO", true).collect {
+                case i: Int => i.toString 
+                case s: String => s
+              }
+              # Seq[String] = List(1, ScalaIO)</span>
+              </code>
+            </pre>
+            <aside class="notes">
+              Partial functions can be combined
+              The order matters, just like in pattern matching
+            </aside>
+          </section>
+        </section>
+
+        <section data-markdown >
+          <script type="text/template" data-notes="^Note:" >
+            ## Concurrency
+            <img src="./image/lanes.jpg" width="700px" />
+
+Note:
+            Immutability makes it easier to implement concurrency
+            Just add another lane...
+          </script>
+        </section>
+
+          <section>
+            <section data-markdown >
+              <script type="text/template" >
+                ## Functional
+                * Don't iterate and mutate; Transform!
+                * Define functions in any scope
+                * Pass functions to other functions
+              </script>
+            </section>
+
+            <section data-markdown >
+              <script type="text/template" >
+                Function that returns the length of a list of strings
+                <pre>
+                  <code data-trim data-noescape class="java fragment" >
+                    public static String getLongest(String[] strings) {
+                      String longestString = null;
+                      for (String s : strings) {
+                        if (s.length() > longestString.length()) {
+                            maxLength = s.length();
+                            longestString = s;
+                        }
+                      }
+                      return longestString;
+                    }
+                  </code>
+                  <code data-trim data-noescape class="java fragment" >
+                    strings.stream()
+                      .sorted((e1, e2) -> e1.length() > e2.length() ? -1 : 1)
+                      .findFirst();
+                  </code>
+                  <code data-trim data-noescape class="scala fragment" >
+                    def getLongest(strings: Seq[String]) = strings.maxBy(_.length)
+                  </code>
+                </pre>
+                <pre>
+                </pre>
+                <pre>
+                </pre>
+              </script>
+            </section>
+
+           <section data-markdown data-noescape>
+             <script type="text/template" data-noescape>
+               ## Map
+               <pre>
+                <code style="max-height:800px" data-trim data-noescape class="scala" >
+                  val strings = Seq("Vive la france", "Scala.IO")
+
+                  <span class="fragment">def stringLength(s: String) = s.length</span>
+                  <span class="fragment"># stringLength: (val s: String) => Int</span>
+
+                  <span class="fragment">val sLength = (s: String) => s.length
+                  # sLength: String => Int</span>
+
+                  <span class="fragment">def map[B](f: (A) ⇒ B): Traversable[B]</span>
+                  <span class="fragment">def map[Int](f: (String) ⇒ Int): Traversable[Int]</span>
+
+                  <span class="fragment">strings.map(s => s.length)</span>
+                  <span class="fragment">strings.map(_.length)</span>
+                  <span class="fragment">strings.map(stringLength)</span>
+                  <span class="fragment">strings.map(sLength)</span>
+                </code>
+               </pre>
+             </script>
+           </section>
+
+           <section data-markdown >
+             <script type="text/template" >
+               ## Flatten
+               <pre>
+                 <code data-trim data-noescape class="scala" >
+                   Seq(
+                     Seq("Scala.IO"), Seq(), Seq("I love france", "Lyon")
+                   )<span class="fragment">.flatten</span>
+                   <span class="fragment"># Seq[String] = List(Scala.IO, I love france, Lyon)</span>
+
+                   <span class="fragment">Seq(Some("ScalaIO"), None, Some("Lyon")).flatten</span>
+                   <span class="fragment"># Seq[String] = List(ScalaIO, Lyon)</span>
+                 </code>
+               </pre>
+             </script>
+           </section>
+
+           <section data-markdown >
+             <script type="text/template" >
+               ### Get all ordered products
+               <pre>
+                 <code data-trim data-noescape class="java" >
+                  public List<Product> getProducts(List<Order> orders) {
+                      List<Product> products = new ArrayList<Product>();
+                      for (Order order : orders) {
+                          products.addAll(order.getProducts());
+                      }
+                      return products;
+                  }
+                 </code>
+                 <code data-trim data-noescape class="scala fragment" >
+                  def products(orders: Seq[Order]) = orders.flatMap(o => o.products)
+                 </code>
+               </pre>
+             </script>
+           </section>
+
+           <section>
+             <pre>
+              <code data-trim class="scala" >
+                users.flatMap(u => u.orders.flatMap(o => o.products))
+                # Seq[Product]
+
+                for {
+                  user <- users
+                  orders <- user.orders
+                  products <- orders.products
+                  } yield products
+                  # Seq[Product]
+              </code>
+             </pre>
+           </section>
         </section>
       </div>
     </div>
