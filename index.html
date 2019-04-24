@@ -33,8 +33,7 @@
               <p> @MagnusHarlin </p>
               <p> github.com/Mharlin </p>
 
-              <img alt="SpeedLedger" src="./image/speedledger.png" style="border:0px; margin:0px; padding:0px" width="500px" />
-              <img alt="Sponsors" src="./image/ScalaIOSponsors.png" style="margin:0px" width="1000px;"/>
+              <img alt="SpeedLedger" src="./image/speedledger.png" style="border:0px; margin:0px; padding:0px" width="450px" />
             </script>
           </section>
         </section>
@@ -76,7 +75,7 @@ Note:
                 <span class="fragment">a: Int = 5</span>
               </code>
               <code class="scala fragment" data-trim data-noescape>
-                <span class="fragment">scala></span><span class="fragment"> def add(x:Int, y:Int) =</span><span class="fragment"> x + y</span>
+                scala> def add(x:Int, y:Int) =<span class="fragment"> x + y</span>
                 <span class="fragment"># add: (x: Int, y: Int) => Int</span><span class="fragment">
 
                 scala> add(5, 3)
@@ -84,6 +83,7 @@ Note:
               </code>
             </pre>
             <aside class="notes">
+              * type inference
               * val is for immutable variables
               * var is for mutable variables
             </aside>
@@ -232,17 +232,17 @@ Note:
             ## Create Option values
             <pre>
               <code data-trim data-noescape class="scala">
-                <span class="fragment">val a = Some("Scala")</span>
+                <span>val a = Some("Scala")</span>
                 <span class="fragment"># a: Some[String] = Some(Scala)</span>
 
                 <span class="fragment">val a = None
                 # a: None.type = None</span>
 
-                <span class="fragment">val maybeScalaIO =
-                if (util.Random.nextBoolean()) Some("ScalaIO")
-                else None</span>
+                <span class="fragment">val maybeJavaForum =
+                  if (util.Random.nextBoolean()) Some("JavaForum")
+                  else None</span>
 
-                <span class="fragment">maybeScalaIO<span class="fragment">.getOrElse("Normal working day")</span>
+                <span class="fragment">maybeJavaForum<span class="fragment">.getOrElse("Normal working day")</span>
                 </span>
               </code>
             </pre>
@@ -265,19 +265,41 @@ Note:
               <code data-trim data-noescape class="scala" >
                 case class User(firstName: String, surname: String)
 
-                <span class="fragment">val user = new User</span><span class="fragment">("Scala", "IO")</span>
-                <span class="fragment"># user: User = User(Scala,IO)</span>
+                <span class="fragment">val user = new User</span><span class="fragment">("Java", "Forum")</span>
+                <span class="fragment"># user: User = User("Java", "Forum")</span>
 
-                <span class="fragment">val user = User</span><span class="fragment">.apply("Scala", "IO")</span>
-                <span class="fragment"># user: User = User(Scala,IO)</span>
+                <span class="fragment">val user = User</span><span class="fragment">.apply("Java", "Forum")</span>
+                <span class="fragment"># user: User = User("Java", "Forum")</span>
 
-                <span class="fragment">val user = User</span><span class="fragment">("Scala", "IO")</span>
-                <span class="fragment"># user: User = User(Scala,IO)</span>
+                <span class="fragment">val user = User</span><span class="fragment">("Java", "Forum")</span>
+                <span class="fragment"># user: User = User("Java", "Forum")</span>
 
                 <span class="fragment">val user2 = user</span><span class="fragment">.copy(firstName = "Magnus")</span>
-                <span class="fragment"># user2: User = User(Magnus,IO)</span>
+                <span class="fragment"># user2: User = User(Magnus,Forum)</span>
               </code>
             </pre>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ## Companion object
+              * Same name as the class
+              * Class can access the private members of the companion
+
+              <pre>
+                <code class="scala" data-trim data-noescape>
+                  object User {
+                    def fromString(name: String) = {
+                      val Array(firstName, surname) = name.split(' ')
+                      User(firstName, surname)
+                    }
+                  }
+                </code>
+                <code class="scala fragment" data-trim>
+                  User.fromString("Java Forum")
+                </code>
+              </pre>
+            </script>
           </section>
         </section>
 
@@ -337,23 +359,23 @@ Note:
             Partial functions
             <pre>
               <code data-trim data-noescape class="scala" style="max-height:800px">
-              <span class="fragment">Seq(1, "ScalaIO").map {
+              <span class="fragment">Seq(1, "JavaForum").map {
                 case i: Int => i 
                 case s: String => s
               }
-              # Seq[Any] = List(1, ScalaIO)</span>
+              # Seq[Any] = List(1, JavaForum)</span>
 
-              <span class="fragment">Seq(1, "ScalaIO", true).map {
+              <span class="fragment">Seq(1, "JavaForum", true).map {
                 case i: Int => i.toString 
                 case s: String => s
               }
               # scala.MatchError: true (of class java.lang.Boolean)</span>
 
-              <span class="fragment">Seq(1, "ScalaIO", true).collect {
+              <span class="fragment">Seq(1, "JavaForum", true).collect {
                 case i: Int => i.toString 
                 case s: String => s
               }
-              # Seq[String] = List(1, ScalaIO)</span>
+              # Seq[String] = List(1, JavaForum)</span>
               </code>
             </pre>
             <aside class="notes">
@@ -363,23 +385,13 @@ Note:
           </section>
         </section>
 
-        <section data-markdown >
-          <script type="text/template" data-notes="^Note:" >
-            ## Concurrency
-            <img src="./image/lanes.jpg" style="border:0; width:700px" />
-
-Note:
-            * Immutability makes it easier to implement concurrency
-            * Just add another lane...
-          </script>
-        </section>
-
         <section>
           <section data-markdown >
             <script type="text/template" data-notes="^Note:">
               ## Functional
               * Don't iterate and mutate; Transform!
               * Pass functions to other functions
+
               <img src="./image/composition.jpg" style="border:0; width:650px" />
 
 Note:
@@ -394,7 +406,8 @@ Note:
                 <code data-trim data-noescape class="java fragment" >
                   public static String getLongest(String[] strings) {
                     String longestString = "";
-		    int maxLength = 0;
+                    int maxLength = 0;
+
                     for (String s : strings) {
                       if (s.length() > longestString.length()) {
                           maxLength = s.length();
@@ -425,7 +438,7 @@ Note:
               ## Map
               <pre>
                <code style="max-height:800px" data-trim data-noescape class="scala" >
-                 val strings = Seq("Vive la france", "Scala.IO")
+                 val strings = Seq("Java", "Forum")
 
                  <span class="fragment">def stringLength(s: String) = s.length</span>
                  <span class="fragment"># stringLength: (val s: String) => Int</span>
@@ -451,12 +464,12 @@ Note:
               <pre>
                 <code data-trim data-noescape class="scala" >
                   Seq(
-                    Seq("Scala.IO"), Seq(), Seq("I love france", "Lyon")
+                    Seq("JavaForum"), Seq(), Seq("Göteborg", "Sverige")
                   )<span class="fragment">.flatten</span>
-                  <span class="fragment"># Seq[String] = List(Scala.IO, I love france, Lyon)</span>
+                  <span class="fragment"># Seq[String] = List(JavaForum, Göteborg, Sverige)</span>
 
-                  <span class="fragment">Seq(Some("ScalaIO"), None, Some("Lyon")).flatten</span>
-                  <span class="fragment"># Seq[String] = List(ScalaIO, Lyon)</span>
+                  <span class="fragment">Seq(Some("JavaForum"), None, Some("Göteborg")).flatten</span>
+                  <span class="fragment"># Seq[String] = List(JavaForum, Göteborg)</span>
                 </code>
               </pre>
             </script>
@@ -476,7 +489,8 @@ Note:
                  }
                 </code>
                 <code data-trim data-noescape class="scala fragment" >
-                 def products(orders: Seq[Order]) = orders.flatMap(o => o.products)
+                  def products(orders: Seq[Order]) = 
+                    orders.flatMap(o => o.products)
                 </code>
               </pre>
             </script>
@@ -487,14 +501,85 @@ Note:
              <code data-trim class="scala" >
                users.flatMap(u => u.orders.flatMap(o => o.products))
                # Seq[Product]
+            </code>
 
+            <code data-trim class="scala fragment" >
                for {
                  user <- users
                  orders <- user.orders
                  products <- orders.products
-                 } yield products
-                 # Seq[Product]
-             </code>
+               } yield products
+               # Seq[Product]
+               </span>
+            </code>
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <section data-markdown >
+            <script type="text/template" data-notes="^Note:" >
+            ## Concurrency
+            <img src="./image/lanes.jpg" style="border:0; width:700px" />
+
+Note:
+            * Immutability makes it easier to implement concurrency
+            * Just add another lane...
+            </script>
+          </section>
+          <section>
+            Parallel collections
+            <pre>
+              <code data-trim class="scala" data-noescape>
+                val seq = (1 to 10000)
+                seq.map(_ + 42)
+
+                <span class="fragment">seq.par.map(_ + 42)</span>
+                </code>
+            </pre>
+            <aside class="notes">
+              Paralell collections are available for Seq, List, Vec, Map, Set...
+            </aside>
+          </section>
+          <section data-markdown >
+            <script type="text/template" data-notes="^Note:">
+              ### Futures
+              ```scala
+              val inverseFuture: Future[Matrix] = Future {
+                fatMatrix.inverse() // non-blocking long lasting computation
+              }(executionContext)
+              ```
+Note:
+              ExecutionContext.global
+              Backed by ForkJoinPool
+              Defaults to the number of processors. Enough in most cases.
+            </script>
+          </section>
+          <section data-markdown >
+            <script type="text/template">
+              ```scala
+              val inverseFuture: Future[Matrix] = Future {
+                fatMatrix.inverse()
+              } // ec is implicitly passed
+              ```
+            </script>
+          </section>
+          <section>
+            <pre>
+              <code data-trim class="scala" data-noescape>
+              val usdQuote = Future { connection.getCurrentValue(USD) }
+              val sekQuote = Future { connection.getCurrentValue(SEK) }
+
+              <span class="fragment">val purchase = for {
+                usd <- usdQuote
+                sek <- sekQuote
+                if isProfitable(usd, sek)
+              } yield connection.buy(amount, sek)
+
+              purchase foreach { _ =>
+                println("Purchased " + amount + " SEK")
+              }</span>
+              </code>
             </pre>
           </section>
         </section>
@@ -556,7 +641,7 @@ Note:
 
             Please let me know what you thought about the session @MagnusHarlin
 
-            The slides are available at https://mharlin.github.io/ScalaForJavaDevelopers/
+            The slides are available at https://mharlin.github.io/ScalaForJavaDevelopers
           </script>
         </section>
       </div>
@@ -575,7 +660,8 @@ Note:
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
+				],
+        history: true
 			});
 		</script>
 	</body>
