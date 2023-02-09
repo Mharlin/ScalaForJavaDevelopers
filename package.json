@@ -23,7 +23,7 @@
     "grunt-sass": "~1.2.0",
     "grunt-retire": "~1.0.9",
     "grunt-zip": "~0.20.0",
-    "mustache": "~2.2.1",
+    "mustache": "~4.2.0",
     "node-sass": "~7.0.0",
     "socket.io": "^2.5.0"
   },
